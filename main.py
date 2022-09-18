@@ -25,15 +25,22 @@ class Cashier:
             if amount * currency_rate <= current_uah_balance:
                 self.set_usd_balance(current_usd_balance + amount)
                 self.set_uah_balance(current_uah_balance - amount * currency_rate)
-                print("Success!\n", "UAH AVAILABLE: ",
-                      self.get_uah_balance(), '\n' "USD AVAILABLE: ", self.get_usd_balance())
+                print("\n\nSuccess!")
+                print("UAH AVAILABLE: ", self.get_uah_balance(), '\n' "USD AVAILABLE: ", self.get_usd_balance(), "\n\n")
             else:
-                required_balance = amount * currency_rate
-                print("UNAVAILABLE, REQUIRED BALANCE:", required_balance, "AVAILABLE: ", current_uah_balance)
+                required_balance = round(amount * currency_rate, 2)
+                print("\n\nUNAVAILABLE, REQUIRED BALANCE:", required_balance, "AVAILABLE: ",
+                      current_uah_balance, "\n\n")
         elif currency_to_exchange == 'uah':
-            if amount <= current_usd_balance:
-                self.set_usd_balance(current_usd_balance - amount)
-                self.set_uah_balance(current_uah_balance + amount * currency_rate)
+            if amount <= current_uah_balance:
+                self.set_usd_balance(current_usd_balance - round(amount / currency_rate))
+                self.set_uah_balance(current_uah_balance + amount)
+                print("\n\nSuccess!")
+                print("UAH AVAILABLE: ", self.get_uah_balance(), '\n' "USD AVAILABLE: ", self.get_usd_balance(), "\n\n")
+            else:
+                required_balance = round(amount / currency_rate, 2)
+                print("\n\nUNAVAILABLE, REQUIRED BALANCE:", required_balance, "AVAILABLE: ",
+                      current_usd_balance, "\n\n")
 
     @staticmethod
     def get_currency_rate():
@@ -73,8 +80,14 @@ class Cashier:
 def main():
     try:
         print("Hi. Before use main functionality, you need to specify your USD and UAH balance")
-        usd_count = int(input("Please, enter your USD balance (only digits accepted): "))
-        uah_count = int(input("Please, enter your UAH balance (only digits accepted): "))
+        while True:
+            try:
+                usd_count = float(input("Please, enter your USD balance (only digits accepted): "))
+                uah_count = float(input("Please, enter your UAH balance (only digits accepted): "))
+            except ValueError:
+                print("Invalid input! Try again")
+            else:
+                break
         cashier = Cashier(usd_count=usd_count, uah_count=uah_count)
         while True:
             print("Please choose one of the following action (just type the action name:",
@@ -99,7 +112,7 @@ def main():
                                 print("Exiting to main menu...")
                                 break
                             case _:
-                                print("\n\nInvalid input! Try again.\n\n")
+                                print(f"\n\nInvalid input: {rate_action}! Try again.\n\n")
                 case "exchange":
                     while True:
                         print("Please, choose one of the following actions:",
@@ -108,22 +121,34 @@ def main():
                         exchange_action = input("Action: ").lower()
                         match exchange_action:
                             case "exchange usd":
-                                amount_usd = int(input("Please, enter the amount of usd you want to exchange"
-                                                       " (only digits accepted): "))
+                                while True:
+                                    try:
+                                        amount_usd = float(input("Please, enter the amount of usd you want to exchange"
+                                                                 " (only digits accepted): "))
+                                    except ValueError:
+                                        print("\n\nInvalid input! Try again.\n\n")
+                                    else:
+                                        break
                                 cashier.currency_exchange(amount_usd, currency_to_exchange='usd')
                             case "exchange uah":
-                                amount_uah = int(input("Please, enter the amount of uah you want to exchange"
-                                                       " (only digits accepted): "))
+                                while True:
+                                    try:
+                                        amount_uah = float(input("Please, enter the amount of uah you want to exchange"
+                                                                 " (only digits accepted): "))
+                                    except ValueError:
+                                        print("\n\nInvalid input! Try again.\n\n")
+                                    else:
+                                        break
                                 cashier.currency_exchange(amount_uah, currency_to_exchange='uah')
                             case "exit":
                                 print("Exiting to main menu...")
                                 break
                             case _:
-                                print("\n\nInvalid input! Try again.\n\n")
+                                print(f"\n\nInvalid input: {exchange_action}! Try again.\n\n")
                 case "exit":
                     raise SystemExit(0)
                 case _:
-                    print("\n\nInvalid input! Try again.\n\n")
+                    print(f"\n\nInvalid input: {action}! Try again.\n\n")
     except KeyboardInterrupt:
         print("\nProgram exited via keyboard interrupt. Good bye!")
 
