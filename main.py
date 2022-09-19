@@ -136,7 +136,6 @@ def main():
             else:
                 break
         cashier = Cashier(usd_count=usd_count, uah_count=uah_count)
-        print(type(cashier))
         while True:
             print("Please choose one of the following action (just type the action name:",
                   "--RATE-- (Access to the currency rate and balance operations)",
@@ -196,6 +195,7 @@ def main():
                             case _:
                                 print(f"\n\nInvalid input: {exchange_action}! Try again.\n\n")
                 case "exit":
+                    print("Good bye!")
                     raise SystemExit(0)
                 case _:
                     print(f"\n\nInvalid input: {action}! Try again.\n\n")
