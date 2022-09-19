@@ -47,12 +47,18 @@ class Cashier:
         api_url_currency_data = f"https://bank.gov.ua/NBUStatService/v1/statdirectory/exchangenew?" \
                                 f"valcode=USD&json"
         response_currency = requests.request("GET", api_url_currency_data)
+
         if response_currency.status_code == requests.codes.ok:
             raw_currency_data = response_currency.json()
-            currency_rate: float = float(raw_currency_data[0]['rate'])
-            return currency_rate
+            if raw_currency_data:
+                currency_rate: float = float(raw_currency_data[0]['rate'])
+                return currency_rate
+            else:
+                print("En empty response from API. Program will be terminated")
+                raise SystemExit(1)
         else:
-            print("Error:", response_currency.status_code, response_currency.text)
+            print("Error:", response_currency.status_code, response_currency.text, '\n', "Program will be terminated")
+            raise SystemExit(1)
 
     @staticmethod
     def get_usd_balance() -> str:
