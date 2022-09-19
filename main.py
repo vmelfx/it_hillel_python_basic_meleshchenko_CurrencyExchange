@@ -7,6 +7,10 @@ class Cashier:
         self.set_usd_balance(usd_count=usd_count)
 
     def rate_and_cash_balance(self, currency=None):
+        """
+        This method is for getting current usd and uah balance
+        Takes currency name and prints how much of it you have
+        """
         currency_rate: float = self.get_currency_rate()
         if currency == 'usd':
             current_usd_balance: str = self.get_usd_balance()
@@ -17,7 +21,19 @@ class Cashier:
         else:
             print(f"Invalid currency{currency}")
 
-    def currency_exchange(self, amount, currency_to_exchange=None):
+    def currency_exchange(self, amount, currency_to_exchange=None) -> None:
+        """
+        This method is responsible for currency exchange operations.
+        When called, first it gets current currency rate from NBU-API, using get_currency_rate method
+        and writes it into the currency_rate variable, then it gets current uah and usd balance and writes it into
+        current_uah_balance and current_usd_balance respectively.
+        After that, depending on given currency_to_exchange value method performs the exchange operation.
+        If method can't get exchange rate, then, the program will be terminated
+        to avoid mathematical errors.
+        The result of the method is updated balances in files, printed status and printed updated balances
+        :param amount: amount of currency you want to exchange
+        :param currency_to_exchange: currency, you want to exchange
+        """
         currency_rate: float = round(self.get_currency_rate(), 2)
         current_uah_balance: float = float(self.get_uah_balance())
         current_usd_balance: float = float(self.get_usd_balance())
@@ -44,6 +60,9 @@ class Cashier:
 
     @staticmethod
     def get_currency_rate() -> float:
+        """
+        This method gets the current exchange rate UAH-USD from NBU-API and returns it in float-format
+        """
         api_url_currency_data = f"https://bank.gov.ua/NBUStatService/v1/statdirectory/exchangenew?" \
                                 f"valcode=USD&json"
         response_currency = requests.request("GET", api_url_currency_data)
@@ -62,28 +81,50 @@ class Cashier:
 
     @staticmethod
     def get_usd_balance() -> str:
+        """
+        This method gets current usd balance from USD_Balance.txt and return the value as string
+        """
         with open("USD_Balance.txt", "r") as usd_wallet:
             current_usd_balance = usd_wallet.read()
         return current_usd_balance
 
     @staticmethod
     def get_uah_balance() -> str:
+        """
+        This method gets current uah balance from UAH_Balance.txt and return the value as string
+        """
         with open("UAH_Balance.txt", "r") as uah_wallet:
             current_uah_balance = uah_wallet.read()
         return current_uah_balance
 
     @staticmethod
     def set_usd_balance(usd_count: float):
+        """
+        This method takes amount of usd cash as an argument and write it in USD_Balance.txt
+        :param usd_count: amount of usd cash
+        """
         with open("USD_Balance.txt", "w") as usd_wallet:
             usd_wallet.write(str(usd_count))
 
     @staticmethod
     def set_uah_balance(uah_count: float):
+        """
+        This method takes amount of usd cash as an argument and write it in UAH_Balance.txt
+        :param uah_count: amount of uah cash
+        """
         with open("UAH_Balance.txt", "w") as uah_wallet:
             uah_wallet.write(str(uah_count))
 
 
 def main():
+    """
+    This is main function where all logic is configured.
+    Before the first use, you need to specify your USD and UAH balance to be able to do operations.
+    Once you entered your balance you will get to operations menu.
+    All inputs are protected from incorrect input.
+    If any exception will be raised during execution you will get a "System error" message.
+    Detailed information about how this program works will be placed in readme.md.
+    """
     try:
         print("Hi. Before use main functionality, you need to specify your USD and UAH balance")
         while True:
@@ -160,6 +201,8 @@ def main():
                     print(f"\n\nInvalid input: {action}! Try again.\n\n")
     except KeyboardInterrupt:
         print("\nProgram exited via keyboard interrupt. Good bye!")
+    except Exception:
+        print("\nSystem error!")
 
 
 if __name__ == '__main__':
