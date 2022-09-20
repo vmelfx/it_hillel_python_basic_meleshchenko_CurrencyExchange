@@ -63,7 +63,7 @@ class Cashier:
         """
         This method gets the current exchange rate UAH-USD from NBU-API and returns it in float-format
         """
-        api_url_currency_data = f"https://bank.gov.ua/NBUStatService/v1/statdirectory/exchangenew?" \
+        api_url_currency_data: str = f"https://bank.gov.ua/NBUStatService/v1/statdirectory/exchangenew?" \
                                 f"valcode=USD&json"
         response_currency = requests.request("GET", api_url_currency_data)
 
