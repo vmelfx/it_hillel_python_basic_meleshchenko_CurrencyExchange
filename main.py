@@ -6,7 +6,7 @@ class Cashier:
         self.set_uah_balance(uah_count=uah_count)
         self.set_usd_balance(usd_count=usd_count)
 
-    def rate_and_cash_balance(self, currency=None):
+    def rate_and_cash_balance(self, currency=None) -> None:
         """
         This method is for getting current usd and uah balance
         Takes currency name and prints how much of it you have
@@ -64,7 +64,7 @@ class Cashier:
         This method gets the current exchange rate UAH-USD from NBU-API and returns it in float-format
         """
         api_url_currency_data: str = f"https://bank.gov.ua/NBUStatService/v1/statdirectory/exchangenew?" \
-                                f"valcode=USD&json"
+                                     f"valcode=USD&json"
         response_currency = requests.request("GET", api_url_currency_data)
 
         if response_currency.status_code == requests.codes.ok:
@@ -98,7 +98,7 @@ class Cashier:
         return current_uah_balance
 
     @staticmethod
-    def set_usd_balance(usd_count: float):
+    def set_usd_balance(usd_count: float) -> None:
         """
         This method takes amount of usd cash as an argument and write it in USD_Balance.txt
         :param usd_count: amount of usd cash
@@ -107,7 +107,7 @@ class Cashier:
             usd_wallet.write(str(usd_count))
 
     @staticmethod
-    def set_uah_balance(uah_count: float):
+    def set_uah_balance(uah_count: float) -> None:
         """
         This method takes amount of usd cash as an argument and write it in UAH_Balance.txt
         :param uah_count: amount of uah cash
